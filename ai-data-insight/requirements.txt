@@ -1,0 +1,26 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+pandas
+python-multipart
+aiofiles
+scikit-learn
+joblib
+lightgbm
+requests
+pytest
+pytest-asyncio
+httpx
+pytest-cov
+hypothesis
+# PostgreSQL & Migration
+sqlalchemy[postgresql]
+alembic
+psycopg2-binary
+python-dotenv
+# Auth & Security
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+
+

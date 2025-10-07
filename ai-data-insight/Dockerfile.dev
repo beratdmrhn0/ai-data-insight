@@ -1,0 +1,36 @@
+# Development Dockerfile - Hot reload için
+FROM python:3.11-slim
+
+# Sistem paketlerini güncelle ve gerekli araçları yükle
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libpq-dev \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Çalışma dizinini ayarla
+WORKDIR /app
+
+# Python dependencies'leri kopyala ve yükle
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Uygulama kodunu kopyala (volume mount ile override edilecek)
+COPY main.py .
+COPY preprocess.py .
+COPY anomaly.py .
+COPY forecast.py .
+COPY train.py .
+COPY sample_orders.csv .
+
+# Uploads dizinini oluştur
+RUN mkdir -p uploads
+
+# Port'u expose et
+EXPOSE 8000
+
+# Development mode'da uygulamayı başlat (hot reload açık)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+

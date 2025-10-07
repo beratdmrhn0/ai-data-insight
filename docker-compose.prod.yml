@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Production)
+  database:
+    image: postgres:15-alpine
+    container_name: ai-data-insight-db-prod
+    environment:
+      POSTGRES_DB: ai_data_insight_prod
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres123}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    restart: unless-stopped
+    networks:
+      - ai-network-prod
+    # Production'da port expose etmiyoruz (sadece internal network)
+
+  # Backend API (Production)
+  backend:
+    build:
+      context: ./ai-data-insight
+      dockerfile: Dockerfile
+    container_name: ai-data-insight-backend-prod
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@database:5432/ai_data_insight_prod
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=production
+    depends_on:
+      - database
+    volumes:
+      - ./ai-data-insight/uploads:/app/uploads
+      - ./ai-data-insight/models:/app/models
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - ai-network-prod
+
+  # Frontend (Production)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-data-insight-frontend-prod
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - ai-network-prod
+
+  # Nginx Reverse Proxy (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: ai-data-insight-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - ai-network-prod
+
+volumes:
+  postgres_prod_data:
+
+networks:
+  ai-network-prod:
+    driver: bridge

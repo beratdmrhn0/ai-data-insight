@@ -1,0 +1,4 @@
+# file: C:\SaaS\ai-data-insight\preprocess.py
+# hypothesis_version: 6.140.2
+
+['__main__', 'adet', 'all', 'amount', 'coerce', 'count', 'created', 'date', 'datetime64[ns]', 'fiyat', 'forecast', 'miktar', 'modified', 'object', 'order', 'price', 'qty', 'quantity', 'registered', 'sales', 'sample_orders.csv', 'satış', 'sayı', 'sipariş', 'tarih', 'time', 'timestamp', 'total', 'tutar', 'updated', 'zaman']

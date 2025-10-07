@@ -1,0 +1,4 @@
+# file: C:\SaaS\ai-data-insight\main.py
+# hypothesis_version: 6.140.2
+
+[3600, '*', './uploads', '.csv', '/', '/api/v1/predict', '/api/v1/upload', 'AI Data Insight MVP', 'Analiz tamamlandı', 'Proje iskeleti hazır', 'Upload bulunamadı', 'analysis_id', 'anomalies', 'anomaly_count', 'churn_at_risk_count', 'coerce', 'column_count', 'columns', 'completed', 'created_at', 'customer_id', 'details', 'error', 'failed', 'filename', 'forecast', 'insights', 'last_order_date', 'message', 'no_result', 'ok', 'order_date', 'predictions', 'price', 'processing', 'quantity', 'ready', 'record_count', 'row_index', 'rows', 'sku', 'sqlite:///./app.db', 'started', 'status', 'summary', 'summary_stats', 'top_skus', 'upload_id', 'uploaded', 'wb']

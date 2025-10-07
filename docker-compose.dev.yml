@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Development)
+  database:
+    image: postgres:15-alpine
+    container_name: ai-data-insight-db-dev
+    environment:
+      POSTGRES_DB: ai_data_insight
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d ai_data_insight"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-network-dev
+
+  # Backend API (Development - Hot Reload)
+  backend:
+    build:
+      context: ./ai-data-insight
+      dockerfile: Dockerfile.dev
+    container_name: ai-data-insight-backend-dev
+    environment:
+      - DATABASE_URL=postgresql://appuser:secret@database:5432/ai_data_insight
+      - PYTHONUNBUFFERED=1
+      - SECRET_KEY=dev-secret-key-change-in-production
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./ai-data-insight:/app
+      - ./ai-data-insight/uploads:/app/uploads
+    networks:
+      - ai-network-dev
+
+  # Frontend (Development - Hot Reload)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: ai-data-insight-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - ai-network-dev
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://localhost:8000
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  ai-network-dev:
+    driver: bridge

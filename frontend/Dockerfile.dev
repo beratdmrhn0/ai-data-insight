@@ -1,0 +1,19 @@
+# Development Dockerfile - Hot reload ile geliştirme
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Package dosyalarını kopyala
+COPY package*.json ./
+
+# Tüm bağımlılıkları yükle (dev dependencies dahil)
+RUN npm install
+
+# Kaynak kodunu kopyala
+COPY . .
+
+# Port 5173'ü aç (Vite dev server)
+EXPOSE 5173
+
+# Development server'ı başlat
+CMD ["npm", "run", "dev"]

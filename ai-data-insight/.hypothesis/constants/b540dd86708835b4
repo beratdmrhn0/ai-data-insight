@@ -1,0 +1,4 @@
+# file: C:\SaaS\ai-data-insight\forecast.py
+# hypothesis_version: 6.140.2
+
+['D', 'date', 'day_index', 'forecast', 'order_date', 'quantity']

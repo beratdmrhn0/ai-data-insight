@@ -1,0 +1,4 @@
+# file: C:\SaaS\ai-data-insight\anomaly.py
+# hypothesis_version: 6.140.2
+
+['Total Spend', 'coerce', 'order_date', 'quantity']
